@@ -1,136 +1,475 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grade Note — คำนวณเกรดเฉลี่ยแบบเรียบๆ</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="sayle.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sasiratsami | Portfolio</title>
+
+    <link rel="stylesheet" href="sayle.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-  <main class="stage">
+    <!-- NAVBAR -->
+    <header class="navbar">
 
-    <!-- หัวเรื่อง + มาสคอต -->
-    <header class="hero">
-      <div class="mascot" id="mascot" aria-hidden="true">
-        <svg viewBox="0 0 220 260" xmlns="http://www.w3.org/2000/svg">
-          <!-- glow -->
-          <ellipse cx="110" cy="235" rx="70" ry="14" fill="var(--cyan)" opacity="0.15"/>
+        <a href="#home" class="logo">
+            S<span>.</span>
+        </a>
 
-          <!-- twin tails (back layer) -->
-          <path class="tail tail-left" d="M78,90 C40,95 20,150 34,220 C40,190 55,150 82,120 Z" fill="var(--cyan)"/>
-          <path class="tail tail-right" d="M142,90 C180,95 200,150 186,220 C180,190 165,150 138,120 Z" fill="var(--cyan)"/>
+        <nav>
+            <a href="#home">หน้าแรก</a>
+            <a href="#about">เกี่ยวกับฉัน</a>
+            <a href="#education">การศึกษา</a>
+            <a href="#hobby">งานอดิเรก</a>
+            <a href="#works">ผลงาน</a>
+            <a href="#contact">ติดต่อ</a>
+        </nav>
 
-          <!-- body -->
-          <path d="M78,150 Q110,135 142,150 L150,230 Q110,246 70,230 Z" fill="var(--panel-soft)" stroke="var(--cyan)" stroke-width="2.5"/>
-          <path d="M92,150 L96,190 L124,190 L128,150 Z" fill="var(--cyan)" opacity="0.5"/>
-
-          <!-- arm wave -->
-          <path class="arm-wave" d="M146,158 Q172,150 178,120" stroke="var(--panel-soft)" stroke-width="14" stroke-linecap="round" fill="none"/>
-          <path d="M62,160 Q46,178 50,205" stroke="var(--panel-soft)" stroke-width="14" stroke-linecap="round" fill="none"/>
-
-          <!-- head -->
-          <circle cx="110" cy="110" r="52" fill="#F4E3D3"/>
-
-          <!-- hair front -->
-          <path d="M58,100 Q55,55 110,48 Q165,55 162,100 Q150,80 110,80 Q70,80 58,100 Z" fill="var(--cyan)"/>
-          <path d="M60,96 Q56,72 78,58" stroke="var(--cyan)" stroke-width="10" stroke-linecap="round" fill="none"/>
-          <path d="M160,96 Q164,72 142,58" stroke="var(--cyan)" stroke-width="10" stroke-linecap="round" fill="none"/>
-
-          <!-- headset accessory -->
-          <path d="M66,92 Q110,60 154,92" stroke="var(--pink)" stroke-width="5" fill="none" stroke-linecap="round"/>
-          <circle cx="66" cy="96" r="7" fill="var(--pink)"/>
-          <circle cx="154" cy="96" r="7" fill="var(--pink)"/>
-
-          <!-- blush -->
-          <ellipse cx="82" cy="122" rx="9" ry="5" fill="var(--pink)" opacity="0.45"/>
-          <ellipse cx="138" cy="122" rx="9" ry="5" fill="var(--pink)" opacity="0.45"/>
-
-          <!-- eyes -->
-          <g class="eyes">
-            <ellipse class="eye" cx="90" cy="112" rx="7" ry="9" fill="#20202A"/>
-            <ellipse class="eye" cx="130" cy="112" rx="7" ry="9" fill="#20202A"/>
-            <circle cx="92.5" cy="108" r="2" fill="#fff"/>
-            <circle cx="132.5" cy="108" r="2" fill="#fff"/>
-          </g>
-
-          <!-- smile -->
-          <path d="M100,130 Q110,137 120,130" stroke="#20202A" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        </svg>
-      </div>
-
-      <div class="hero-text">
-        <p class="eyebrow">GRADE NOTE</p>
-        <h1 class="title">คำนวณเกรดเฉลี่ย</h1>
-        <p class="subtitle">กรอกคะแนนกับหน่วยกิต แล้วให้มิโกะช่วยคำนวณให้เธอ</p>
-      </div>
     </header>
 
-    <!-- การ์ดคำนวณ -->
-    <section class="card" aria-label="แบบฟอร์มคำนวณเกรด">
 
-      <div class="table-wrap">
-        <div class="row row-head">
-          <span>วิชา</span>
-          <span>คะแนน (0–100)</span>
-          <span>หน่วยกิต</span>
-          <span></span>
+    <!-- HOME -->
+    <section id="home" class="hero">
+
+        <div class="hero-text">
+
+            <div class="hello">
+                🌷 WELLCOME
+            </div>
+
+            <h1>
+                Portfolio<br>
+                Sasiratsami<span>Sithithitapanya</span>
+            </h1>
+
+            <p class="hero-description">
+                วิทยาลัยเทคนิคนครนายก สาขาเทคโนโลยีธุรกิจดิจิทัล
+            </p>
+
+            <div class="buttons">
+
+                <a href="#works" class="btn">
+                    ดูผลงาน
+                </a>
+
+                <a href="#about" class="btn-light">
+                    ติดต่อ
+                </a>
+
+            </div>
+
         </div>
 
-        <div class="rows" id="rows"></div>
-      </div>
 
-      <button class="btn btn-add" id="addRow" type="button">+ เพิ่มวิชา</button>
+        <!-- รูปโปรไฟล์ -->
+        <div class="hero-photo">
 
-      <div class="actions">
-        <button class="btn btn-primary" id="calcBtn" type="button">คำนวณเกรด</button>
-        <button class="btn btn-ghost" id="resetBtn" type="button">เริ่มใหม่</button>
-      </div>
+            <div class="photo-decoration one">✦</div>
+            <div class="photo-decoration two">♡</div>
 
-      <p class="error-msg" id="errorMsg" role="alert"></p>
+            <div class="photo-frame">
+
+                <img
+                    src="assets/S__.jpg"
+                    alt="Profile">
+
+            </div>
+
+            <div class="photo-label">
+                💻 Digital Student
+            </div>
+
+        </div>
+
     </section>
 
-    <!-- ผลลัพธ์ -->
-    <section class="result" id="resultSection" aria-live="polite">
-      <div class="result-card">
-        <div class="result-main">
-          <p class="result-label">เกรดเฉลี่ย (GPA)</p>
-          <div class="result-gpa" id="resultGpa">–</div>
-          <div class="result-badge" id="resultBadge"></div>
+
+    <!-- ABOUT -->
+    <section id="about" class="section">
+
+        <div class="heading">
+
+            <span>01 — ABOUT ME</span>
+
+            <h2>เกี่ยวกับฉัน 🌼</h2>
+
         </div>
-        <div class="result-side">
-          <div class="stat">
-            <span class="stat-label">หน่วยกิตรวม</span>
-            <span class="stat-value" id="resultCredits">0</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">คะแนนเฉลี่ย</span>
-            <span class="stat-value" id="resultAvgScore">0</span>
-          </div>
+
+
+        <div class="about-layout">
+
+            <div class="about-picture">
+
+                <img
+                    src="https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=700&q=80"
+                    alt="Workspace">
+
+                <div class="picture-note">
+                    ✨ Creative Space
+                </div>
+
+            </div>
+
+
+            <div class="about-content">
+
+                <h3>
+                    Why I Choose This Field
+                </h3>
+
+                <p>
+                    เหตุผล:เลือกเรียนสาขานี้ เพื่อฝึกการใช้คอมพิวเตอร์ทำงานในอนาคตของส่วนราชการ ใช้ในการทำงาน ต่อยอดการทำธุรกิจ ส่วนใหญ่ใช้คอมพิวเตอร์ในการทำงาน
+                    เช่น การพิมพ์เอกสารเพื่อความสะดวก รวดเร็วง่ายต่อการใช้ในอนาคต
+                </p>
+
+                <p>
+                    ชอบเรียนรู้สิ่งใหม่ ๆ เปิดประสบการณ์
+                    และนำเทคโนโลยีมาประยุกต์ใช้ในอนาคต
+                    เพื่อสร้างผลงานที่สวยงามและใช้งานได้จริง 
+                </p>
+
+
+                <div class="information">
+
+                    <div class="info-box blue">
+                        <span>🙍‍♀️</span>
+                        <small>ชื่อ</small>
+                        <strong>
+                            ศศิรัศมี สิทธิธิตะปัญญา <BR>
+                        </strong>
+                        <P>
+                            IG:_sssmind
+                        </P>
+                        <p>
+                            FB:Sasirat Sami's
+                        </p>
+                    </div>
+
+                    <div class="info-box purple">
+                        <span>📍</span>
+                        <small>ที่อยู่</small>
+                        <strong>66/6 หมู่ 8 ต.สาริกา อ.เมือง จ.นครนายก 26000</strong>
+                        <p>
+                            T.092-880-4201
+                        </p>
+                    </div>
+
+                    <div class="info-box pink">
+                        <span>🎓</span>
+                        <small>สาขา</small>
+                        <strong>เทคโนโลยีธุรกิจดิจิทัล 1/2</strong>
+                    </div>
+
+                    <div class="info-box green">
+                        <span>💡</span>
+                        <small>สนใจ</small>
+                        <strong>คอมพิวเตอร์ การสร้างคอนเทนต์ กฎหมาย ภาษาอังกฤษ</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
-        <p class="result-note" id="resultNote"></p>
-      </div>
+
     </section>
 
-  </main>
 
-  <footer class="footer">
-    <p>Grade Note · mascot original design</p>
-  </footer>
+    <!-- EDUCATION -->
+    <section id="education" class="section soft-bg">
 
-  <!-- แม่แบบแถวข้อมูล -->
-  <template id="rowTemplate">
-    <div class="row" data-row>
-      <input type="text" class="input subject-input" placeholder="เช่น คณิตศาสตร์" data-field="subject">
-      <input type="number" class="input score-input" placeholder="0-100" min="0" max="100" step="0.01" data-field="score">
-      <input type="number" class="input credit-input" placeholder="1" min="0.5" max="10" step="0.5" value="1" data-field="credit">
-      <button type="button" class="row-remove" data-remove aria-label="ลบวิชานี้">✕</button>
-    </div>
-  </template>
+        <div class="heading">
 
-  <script src="script.js"></script>
-</body>
-</html>
+            <span>02 — EDUCATION</span>
+
+            <h2>การศึกษา 🎓</h2>
+
+        </div>
+
+
+        <div class="education-layout">
+
+            <div class="education-card">
+
+                <div class="edu-icon">
+                    🎓
+                </div>
+
+                <div>
+
+                    <span class="current">
+                        ปัจจุบัน
+                    </span>
+
+                    <h3>
+                        วิทยาลัยเทคนิคนครนายก
+                    </h3>
+
+                    <p>
+                        ระดับประกาศนียบัตรวิชาชีพชั้นสูง (ปวส.)
+                    </p>
+
+                    <strong>
+                        สาขาเทคโนโลยีธุรกิจดิจิทัล<br>
+                    </strong>
+
+                    <span class="current">
+                      มัธยมศึกษาตอนต้น
+                    </span>
+                    <h3>
+                      โรงเรียนนครนายกวิทยาคม
+                    </h3>
+                    <p>
+                      จบปีการศึกษา 2566<br>
+                    </p>
+                    <span class="current">
+                      มัธยมศึกษาตอนปลาย
+                    </span>
+                      
+                   
+                    <h3>
+                      โรงเรียนนครนายกวิทยาคม
+                    </h3>
+                    <p>
+                      จบปีการศึกษา 2569<br>
+                    </p>
+            
+                    
+
+                </div>
+
+            </div>
+
+
+            <div class="education-message">
+
+                <div>📚</div>
+
+                <h3>
+                    Learning is a journey
+                </h3>
+
+                <p>
+                    เรียนรู้สิ่งใหม่ ๆ
+                    พัฒนาทักษะ และนำความรู้ หาข้อมูลให้ตัวเองไปเรื่อยๆและนำ
+                    มาสร้างผลงานเป็นของตัวเอง 
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- HOBBY -->
+    <section id="hobby" class="section">
+
+        <div class="heading">
+
+            <span>03 — MY HOBBIES</span>
+
+            <h2>งานอดิเรก 🌈</h2>
+
+        </div>
+
+
+        <div class="hobby-layout">
+
+            <div class="hobby-text">
+
+                <h3>
+                    ดูหนัง ฟังเพลง ออกกำลังกาย อ่านหนังสือ ทำอาหาร 
+                </h3>
+
+                <p>
+                    งานอดิเรกช่วยให้ฉันได้ผ่อนคลาย
+                    และยังช่วยฝึกความคิดสร้างสรรค์ 😁
+                </p>
+
+            </div>
+
+
+            <div class="hobby-grid">
+
+                <div class="hobby-card">
+                    <div>🎨</div>
+                    <h3>หาความรู้</h3>
+                    <p>กฎหมาย</p>
+                </div>
+
+                <div class="hobby-card">
+                    <div>💻</div>
+                    <h3>เขียนเว็บไซต์</h3>
+                    <p>HTML CSS JavaScript</p>
+                </div>
+
+                <div class="hobby-card">
+                    <div>🏸</div>
+                    <h3>วิ่ง คาดิโอ</h3>
+                    <p>ออกกำลังกายและพักผ่อน</p>
+                </div>
+
+                <div class="hobby-card">
+                    <div>🎬</div>
+                    <h3>ทำสื่อ</h3>
+                    <p>ถ่ายภาพและตัดต่อวิดีโอ</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- WORKS -->
+    <section id="works" class="section soft-bg">
+
+        <div class="heading center">
+
+            <span>04 — MY WORKS</span>
+
+            <h2>ผลงานของฉัน 💼</h2>
+
+            <p>
+                ผลงานจากการเรียนและการฝึกฝน
+            </p>
+
+        </div>
+
+
+        <div class="works-grid">
+
+
+            <div class="work-card">
+
+                <div class="work-photo">
+
+                    <img
+                        src="assets/if.jpg"
+                        alt="Graphic Design">
+
+                    <span>01</span>
+
+                </div>
+
+                <div class="work-content">
+
+                    <h3>
+                        Territorial Defense Student
+                    </h3>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="work-card">
+
+                <div class="work-photo">
+
+                    <img
+                        src="assets/S__if.jpg"
+                        alt="Website Design">
+
+                    <span>02</span>
+
+                </div>
+
+                <div class="work-content">
+
+                   
+                    <h3>
+                         Territorial Defense Student
+                    </h3>
+
+                    
+
+                </div>
+
+            </div>
+
+
+            <div class="work-card">
+
+                <div class="work-photo">
+
+                    <img
+                        src="assets/S__27557895.jpg"
+                        alt="Digital Business">
+
+                    <span>03</span>
+
+                </div>
+
+                <div class="work-content">
+                    
+
+                  
+                    <h3>
+                         Territorial Defense Student
+                        
+                    </h3>
+
+                  <div class="works-grid">
+
+
+           
+                  
+                   
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- SKILLS -->
+    <section class="section">
+
+        <div class="heading">
+
+            <span>05 — MY SKILLS</span>
+
+            <h2>ทักษะของฉัน⭐</h2><br>
+            <h2> 
+              การสร้างเว็บไซต์ การเขียนโค้ด การวินิจฉัยกฎหมาย การผลิตสื่อ การตัดต่อ
+            </h2>
+
+        </div>
+
+
+        <div class="skills-layout">
+
+            <div class="skills-intro">
+
+                <h3>
+                    Always learning
+                </h3>
+
+                <p>
+                    ฉันกำลังพัฒนาทักษะด้านดิจิทัล การฝึกทำงาน เปิดประสบการณ์
+                    อย่างต่อเนื่อง เพื่อสร้างผลงาน
+                    ที่ดีขึ้นในอนาคต
+                </p>
+
+            </div>
+
+
+            <div class="skills">
+
+                <div class

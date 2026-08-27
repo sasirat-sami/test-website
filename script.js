@@ -1,156 +1,826 @@
-(function () {
-  "use strict";
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-  const rowsEl = document.getElementById("rows");
-  const rowTemplate = document.getElementById("rowTemplate");
-  const addRowBtn = document.getElementById("addRow");
-  const calcBtn = document.getElementById("calcBtn");
-  const resetBtn = document.getElementById("resetBtn");
-  const errorMsg = document.getElementById("errorMsg");
-  const resultSection = document.getElementById("resultSection");
-  const resultGpa = document.getElementById("resultGpa");
-  const resultBadge = document.getElementById("resultBadge");
-  const resultNote = document.getElementById("resultNote");
-  const resultCredits = document.getElementById("resultCredits");
-  const resultAvgScore = document.getElementById("resultAvgScore");
-  const mascot = document.getElementById("mascot");
+html {
+    scroll-behavior: smooth;
+}
 
-  const DEFAULT_ROWS = 3;
+body {
+    font-family: "Kanit", sans-serif;
+    background: #fbfcff;
+    color: #34415a;
+    line-height: 1.7;
+}
 
-  /* ---------------- Grade scale (Thai 8-level GPA) ---------------- */
-  const GRADE_SCALE = [
-    { min: 80, letter: "A",  gpa: 4.0, note: "เยี่ยมมาก! มิโกะภูมิใจในตัวเธอสุดๆ" },
-    { min: 75, letter: "B+", gpa: 3.5, note: "เก่งมากเลยนะ อีกนิดเดียวถึง A" },
-    { min: 70, letter: "B",  gpa: 3.0, note: "ทำได้ดีเลยจ้า สู้ต่อไปนะ" },
-    { min: 65, letter: "C+", gpa: 2.5, note: "กำลังไปได้สวย เก็บคะแนนเพิ่มอีกนิด" },
-    { min: 60, letter: "C",  gpa: 2.0, note: "ผ่านได้สบายๆ แต่ยังพัฒนาได้อีก" },
-    { min: 55, letter: "D+", gpa: 1.5, note: "ต้องตั้งใจเพิ่มอีกหน่อยนะ" },
-    { min: 50, letter: "D",  gpa: 1.0, note: "เกือบผ่านแล้ว อย่าเพิ่งถอดใจ" },
-    { min: 0,  letter: "F",  gpa: 0.0, note: "ไม่เป็นไรนะ ลองใหม่ได้เสมอ มิโกะเป็นกำลังใจให้" },
-  ];
 
-  function gradeFromScore(score) {
-    return GRADE_SCALE.find((g) => score >= g.min);
-  }
+/* ================= NAVBAR ================= */
 
-  /* ---------------- Row management ---------------- */
-  function addRow(focus) {
-    const frag = rowTemplate.content.cloneNode(true);
-    rowsEl.appendChild(frag);
-    if (focus) {
-      const last = rowsEl.lastElementChild.querySelector(".subject-input");
-      if (last) last.focus();
-    }
-  }
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
 
-  function removeRow(rowEl) {
-    if (rowsEl.children.length <= 1) {
-      showError("ต้องมีอย่างน้อย 1 วิชานะ");
-      return;
-    }
-    rowEl.remove();
-  }
+    width: 100%;
+    height: 72px;
 
-  rowsEl.addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-remove]");
-    if (!btn) return;
-    removeRow(btn.closest("[data-row]"));
-    hideResult();
-  });
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  addRowBtn.addEventListener("click", () => {
-    addRow(true);
-    hideResult();
-  });
+    padding: 0 8%;
 
-  resetBtn.addEventListener("click", () => {
-    rowsEl.innerHTML = "";
-    for (let i = 0; i < DEFAULT_ROWS; i++) addRow(false);
-    hideResult();
-    showError("");
-  });
+    background: rgba(255,255,255,.94);
 
-  /* ---------------- Validation + calculation ---------------- */
-  function showError(msg) { errorMsg.textContent = msg; }
-  function hideResult() { resultSection.classList.remove("show"); }
+    backdrop-filter: blur(12px);
 
-  function readRows() {
-    const rows = [...rowsEl.querySelectorAll("[data-row]")];
-    const data = [];
+    border-bottom: 1px solid #edf0f6;
 
-    for (const row of rows) {
-      const subject = row.querySelector('[data-field="subject"]').value.trim();
-      const scoreRaw = row.querySelector('[data-field="score"]').value;
-      const creditRaw = row.querySelector('[data-field="credit"]').value;
+    z-index: 999;
+}
 
-      if (subject === "" && scoreRaw === "" && creditRaw === "") continue;
+.logo {
+    font-family: Poppins;
+    font-size: 27px;
+    font-weight: 600;
 
-      if (subject === "") {
-        throw new Error("อย่าลืมใส่ชื่อวิชาให้ครบทุกแถวนะ");
-      }
+    color: #6479df;
 
-      const score = parseFloat(scoreRaw);
-      const credit = parseFloat(creditRaw);
+    text-decoration: none;
+}
 
-      if (Number.isNaN(score) || score < 0 || score > 100) {
-        throw new Error(`คะแนนของ "${subject}" ต้องอยู่ระหว่าง 0-100`);
-      }
-      if (Number.isNaN(credit) || credit <= 0) {
-        throw new Error(`หน่วยกิตของ "${subject}" ต้องมากกว่า 0`);
-      }
+.logo span {
+    color: #d58db4;
+}
 
-      data.push({ subject, score, credit });
-    }
+nav {
+    display: flex;
+    gap: 25px;
+}
 
-    if (data.length === 0) {
-      throw new Error("ใส่ข้อมูลอย่างน้อย 1 วิชาก่อนคำนวณนะ");
-    }
+nav a {
+    color: #657086;
 
-    return data;
-  }
+    text-decoration: none;
 
-  function calculate() {
-    showError("");
-    let data;
-    try {
-      data = readRows();
-    } catch (err) {
-      showError(err.message);
-      hideResult();
-      return;
-    }
+    font-size: 14px;
 
-    const totalCredit = data.reduce((sum, r) => sum + r.credit, 0);
-    const weightedScore = data.reduce((sum, r) => sum + r.score * r.credit, 0) / totalCredit;
-    const grade = gradeFromScore(weightedScore);
-    const weightedGpa = data.reduce((sum, r) => sum + gradeFromScore(r.score).gpa * r.credit, 0) / totalCredit;
+    transition: .3s;
+}
 
-    displayResult(weightedScore, weightedGpa, grade, totalCredit);
-  }
+nav a:hover {
+    color: #6479df;
+}
 
-  calcBtn.addEventListener("click", calculate);
 
-  /* ---------------- Result display ---------------- */
-  function displayResult(avgScore, gpa, grade, totalCredit) {
-    resultGpa.textContent = gpa.toFixed(2);
-    resultBadge.textContent = `เกรด ${grade.letter}`;
-    resultNote.textContent = grade.note;
-    resultCredits.textContent = totalCredit % 1 === 0 ? totalCredit : totalCredit.toFixed(1);
-    resultAvgScore.textContent = avgScore.toFixed(1);
+/* ================= HERO ================= */
 
-    resultSection.classList.add("show");
-    resultSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+.hero {
+    min-height: 100vh;
 
-    // quick celebratory nod from the mascot
-    mascot.classList.remove("celebrate");
-    void mascot.offsetWidth;
-    mascot.classList.add("celebrate");
-  }
+    padding: 120px 10% 70px;
 
-  /* ---------------- Init ---------------- */
-  function init() {
-    for (let i = 0; i < DEFAULT_ROWS; i++) addRow(false);
-  }
+    display: grid;
 
-  init();
-})();
+    grid-template-columns: 1fr 1fr;
+
+    gap: 50px;
+
+    align-items: center;
+
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            #e5f4ff,
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 80%,
+            #f4e9ff,
+            transparent 30%
+        ),
+        #fbfcff;
+}
+
+.hello {
+    display: inline-block;
+
+    padding: 6px 17px;
+
+    background: #fff;
+
+    color: #6c7fe2;
+
+    border-radius: 30px;
+
+    font-size: 13px;
+
+    box-shadow: 0 7px 20px rgba(70,90,130,.08);
+}
+
+.hero h1 {
+    margin-top: 18px;
+
+    font-size: clamp(43px, 5vw, 65px);
+
+    line-height: 1.18;
+
+    color: #2f3c55;
+}
+
+.hero h1 span {
+    color: #6579e2;
+}
+
+.hero-description {
+    max-width: 520px;
+
+    margin-top: 20px;
+
+    color: #707b90;
+
+    font-size: 17px;
+}
+
+.buttons {
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 28px;
+}
+
+.btn,
+.btn-light {
+    padding: 11px 24px;
+
+    border-radius: 30px;
+
+    text-decoration: none;
+
+    transition: .3s;
+}
+
+.btn {
+    background: #687ce3;
+
+    color: white;
+
+    box-shadow: 0 10px 25px rgba(104,124,227,.25);
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+.btn-light {
+    background: white;
+
+    color: #657086;
+
+    border: 1px solid #e6eaf2;
+}
+
+.btn-light:hover {
+    color: #687ce3;
+
+    border-color: #9aa8ed;
+}
+
+
+/* ================= PROFILE ================= */
+
+.hero-photo {
+    position: relative;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.photo-frame {
+    width: 270px;
+    height: 330px;
+
+    padding: 8px;
+
+    background: white;
+
+    border-radius: 32px;
+
+    box-shadow:
+        0 20px 45px rgba(70,90,130,.15);
+
+    transform: rotate(2deg);
+
+    position: relative;
+}
+
+.photo-frame::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -8px;
+
+    border: 2px dashed #a8b4ed;
+
+    border-radius: 38px;
+
+    z-index: -1;
+}
+
+.photo-frame img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 25px;
+}
+
+.photo-label {
+    position: absolute;
+
+    bottom: 12px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: white;
+
+    padding: 8px 18px;
+
+    border-radius: 25px;
+
+    white-space: nowrap;
+
+    font-size: 12px;
+
+    color: #58657c;
+
+    box-shadow: 0 8px 20px rgba(60,80,120,.12);
+}
+
+.photo-decoration {
+    position: absolute;
+
+    z-index: 3;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    box-shadow: 0 8px 20px rgba(60,80,120,.12);
+
+    font-size: 23px;
+}
+
+.photo-decoration.one {
+    top: 30px;
+    right: 17%;
+    color: #f0a8c9;
+}
+
+.photo-decoration.two {
+    bottom: 40px;
+    left: 17%;
+    color: #8c9ce8;
+}
+
+
+/* ================= SECTION ================= */
+
+.section {
+    padding: 95px 10%;
+}
+
+.soft-bg {
+    background: #f3f7fc;
+}
+
+.heading {
+    margin-bottom: 45px;
+}
+
+.heading span {
+    font-family: Poppins;
+
+    color: #7183df;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    font-weight: 600;
+}
+
+.heading h2 {
+    font-size: 36px;
+
+    color: #33415a;
+
+    margin-top: 3px;
+}
+
+.heading.center {
+    text-align: center;
+}
+
+.heading.center p {
+    color: #7b8698;
+
+    margin-top: 5px;
+}
+
+
+/* ================= ABOUT ================= */
+
+.about-layout {
+    display: grid;
+
+    grid-template-columns: .85fr 1.15fr;
+
+    gap: 55px;
+
+    align-items: center;
+}
+
+.about-picture {
+    position: relative;
+}
+
+.about-picture img {
+    width: 100%;
+    height: 360px;
+
+    object-fit: cover;
+
+    border-radius: 28px;
+
+    box-shadow: 0 18px 40px rgba(70,90,130,.12);
+}
+
+.picture-note {
+    position: absolute;
+
+    bottom: 15px;
+    left: 15px;
+
+    background: white;
+
+    padding: 7px 15px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    color: #59667d;
+
+    box-shadow: 0 7px 18px rgba(50,70,110,.1);
+}
+
+.about-content h3 {
+    font-size: 26px;
+
+    color: #35415a;
+
+    margin-bottom: 10px;
+}
+
+.about-content > p {
+    color: #707c91;
+
+    margin-bottom: 10px;
+}
+
+.information {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 12px;
+
+    margin-top: 22px;
+}
+
+.info-box {
+    padding: 14px 16px;
+
+    border-radius: 17px;
+}
+
+.info-box span {
+    display: block;
+
+    font-size: 21px;
+}
+
+.info-box small {
+    display: block;
+
+    color: #727e91;
+
+    font-size: 11px;
+}
+
+.info-box strong {
+    display: block;
+
+    font-size: 13px;
+
+    color: #3e4b63;
+}
+
+.blue {
+    background: #e8f5ff;
+}
+
+.purple {
+    background: #f0ebff;
+}
+
+.pink {
+    background: #fff0f5;
+}
+
+.green {
+    background: #e9f9f2;
+}
+
+
+/* ================= EDUCATION ================= */
+
+.education-layout {
+    display: grid;
+
+    grid-template-columns: 1.3fr .7fr;
+
+    gap: 25px;
+}
+
+.education-card {
+    background: white;
+
+    padding: 28px;
+
+    border-radius: 25px;
+
+    display: flex;
+
+    gap: 20px;
+
+    align-items: center;
+
+    box-shadow: 0 10px 30px rgba(70,90,130,.07);
+}
+
+.edu-icon {
+    min-width: 65px;
+    height: 65px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #e9e6ff;
+
+    border-radius: 18px;
+
+    font-size: 30px;
+}
+
+.current {
+    color: #7183df;
+
+    font-size: 12px;
+}
+
+.education-card h3 {
+    font-size: 20px;
+
+    color: #35415a;
+}
+
+.education-card p {
+    color: #737f92;
+
+    font-size: 13px;
+}
+
+.education-card strong {
+    color: #6b7dde;
+
+    font-size: 13px;
+}
+
+.education-message {
+    padding: 28px;
+
+    background: #fff0f6;
+
+    border-radius: 25px;
+}
+
+.education-message div {
+    font-size: 30px;
+}
+
+.education-message h3 {
+    margin-top: 5px;
+
+    color: #4b5870;
+}
+
+.education-message p {
+    color: #7c8494;
+
+    font-size: 13px;
+}
+
+
+/* ================= HOBBY ================= */
+
+.hobby-layout {
+    display: grid;
+
+    grid-template-columns: .7fr 1.3fr;
+
+    gap: 40px;
+
+    align-items: center;
+}
+
+.hobby-text h3 {
+    font-size: 24px;
+
+    color: #37445d;
+}
+
+.hobby-text p {
+    color: #778296;
+
+    margin-top: 8px;
+}
+
+.hobby-grid {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 14px;
+}
+
+.hobby-card {
+    padding: 22px;
+
+    background: white;
+
+    border-radius: 20px;
+
+    border: 1px solid #edf0f5;
+
+    transition: .3s;
+}
+
+.hobby-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow: 0 12px 25px rgba(70,90,130,.08);
+}
+
+.hobby-card div {
+    font-size: 32px;
+}
+
+.hobby-card h3 {
+    font-size: 16px;
+
+    margin-top: 3px;
+
+    color: #46536a;
+}
+
+.hobby-card p {
+    color: #7c8698;
+
+    font-size: 12px;
+}
+
+
+/* ================= WORKS ================= */
+
+.works-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 22px;
+}
+
+.work-card {
+    background: white;
+
+    border-radius: 23px;
+
+    overflow: hidden;
+
+    border: 1px solid #e9edf4;
+
+    box-shadow: 0 10px 30px rgba(70,90,130,.06);
+
+    transition: .3s;
+}
+
+.work-card:hover {
+    transform: translateY(-7px);
+
+    box-shadow: 0 18px 35px rgba(70,90,130,.11);
+}
+
+.work-photo {
+    height: 190px;
+
+    position: relative;
+}
+
+.work-photo img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+.work-photo span {
+    position: absolute;
+
+    top: 12px;
+    right: 12px;
+
+    width: 34px;
+    height: 34px;
+
+    background: white;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: #687ce3;
+
+    font-family: Poppins;
+
+    font-size: 10px;
+}
+
+.work-content {
+    padding: 20px;
+}
+
+.work-content small {
+    color: #7183df;
+
+    font-family: Poppins;
+
+    font-size: 9px;
+
+    letter-spacing: 1.5px;
+}
+
+.work-content h3 {
+    margin: 5px 0;
+
+    font-size: 18px;
+
+    color: #3c4961;
+}
+
+.work-content p {
+    color: #778296;
+
+    font-size: 13px;
+}
+
+
+/* ================= SKILLS ================= */
+
+.skills-layout {
+    display: grid;
+
+    grid-template-columns: .8fr 1.2fr;
+
+    gap: 70px;
+
+    align-items: center;
+}
+
+.skills-intro h3 {
+    font-size: 26px;
+
+    color: #35415a;
+}
+
+.skills-intro p {
+    color: #778296;
+
+    margin-top: 8px;
+}
+
+.skill {
+    margin-bottom: 18px;
+}
+
+.skill > div:first-child {
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #4b5870;
+
+    font-size: 14px;
+
+    margin-bottom: 6px;
+}
+
+.skill b {
+    color: #7284df;
+}
+
+.bar {
+    height: 8px;
+
+    background: #e6eaf1;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+.bar i {
+    display: block;
+
+    height: 100%;
+
+    border-radius: 20px;
+
+    background: linear-gradient(
+        90deg,
+        #6980e6,
+        #a28ce6
+    );
+}
+
+.html {
+    width: 90%;
+}
+
+.css {
+    width: 85%;
+}
+
+.js {
+    width: 70%;
+}
+
+.design {
+    width: 85%;
+}
+
+
+/* ================= CONTACT ================= */
+
+.contact {
+    padding: 90px 10%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e6f4ff,
+            #f2eaff
+        );
+}
+
+.contact-content {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 50px;
+
+    align-items: center;
